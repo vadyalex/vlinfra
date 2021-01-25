@@ -1,0 +1,6 @@
+.terraform
+
+.terraform.lock*
+*.tfstate*
+
+thats_the_plan
