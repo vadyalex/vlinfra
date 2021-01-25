@@ -23,9 +23,10 @@ resource "digitalocean_droplet" "vega" {
   region             = "ams3"
   image              = "debian-10-x64"
   name               = "vega"
-  tags               = ["tf"]
+  tags               = ["tf", "swarm", "manager"]
   monitoring         = true
   ipv6               = false
   private_networking = true
   ssh_keys           = [ "ec:32:ca:0e:fa:3d:fb:52:7f:fa:20:5a:77:a8:ed:6a" ]
+  user_data          = data.template_file.user_data.rendered
 }
