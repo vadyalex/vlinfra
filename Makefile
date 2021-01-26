@@ -5,7 +5,7 @@ define trrfrm
 	@docker run -i -t --rm 								\
 			--net=host 									\
 			--user ${id -u}:${id -g} 					\
-			-v ${HOME}/.ssh:/root/.ssh					\
+			-v ${HOME}/.ssh/id_rsa:/root/.ssh/id_rsa:ro	\
 			-v ${PWD}:/app 								\
 			-w /app 									\
 			-e DIGITALOCEAN_TOKEN=${DIGITALOCEAN_TOKEN} \
@@ -24,6 +24,13 @@ refresh: init
 whats-up: refresh
 	$(trrfrm) show
 
-it: refresh
+destroy: refresh
+	$(trrfrm) destroy -force
+
+lets-plan: refresh
 	$(trrfrm) plan -input=false -out=thats_the_plan
+
+lets-apply: lets-plan
 	$(trrfrm) apply -input=false "thats_the_plan"
+
+it: lets-apply
