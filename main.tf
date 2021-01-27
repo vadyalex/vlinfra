@@ -14,10 +14,6 @@ provider "digitalocean" {
   #export DIGITALOCEAN_TOKEN="Your API TOKEN"
 }
 
-# data "local_file" "ssh_private_key" {
-#   filename = "~/.ssh/id_rsa"
-# }
-
 data "template_file" "user_data" {
   template = file("cloud-config.yml")
 }
@@ -45,11 +41,11 @@ resource "digitalocean_droplet" "vega" {
   provisioner "remote-exec" {
     inline = [
       "while [ -z \"$(docker info | grep CPUs)\" ]; do echo 'Waiting for cloud init finishing initializing Docker..'; sleep 10; done",
-      "echo 'Initializing Docker Swarm..",
+      "echo 'Initializing Docker Swarm..'",
       "docker swarm init --advertise-addr ${self.ipv4_address_private}",
-      "echo 'Create traefik overlay network..",
+      "echo 'Create traefik overlay network..'",
       "docker network create --driver=overlay traefik",
-      "echo 'Create traefik service..",
+      "echo 'Create traefik service..'",
       "docker service create --name traefik --constraint=node.role==manager --publish 80:80 --publish 443:443 --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock,readonly --network traefik traefik:v2.4 --providers.docker=true --providers.docker.swarmMode=true --providers.docker.exposedByDefault=false --entrypoints.web.address=:80 --entrypoints.websecure.address=:443 --certificatesresolvers.letsencrypt.acme.email=vadyalex@gmail.com --certificatesresolvers.letsencrypt.acme.storage=acme.json --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web",
       "echo 'All set!",
     ]
