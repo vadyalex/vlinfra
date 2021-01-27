@@ -47,7 +47,7 @@ resource "digitalocean_droplet" "vega" {
       "docker network create --driver=overlay traefik",
       "echo 'Create traefik service..'",
       "docker service create --name traefik --constraint=node.role==manager --publish 80:80 --publish 443:443 --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock,readonly --network traefik traefik:v2.4 --providers.docker=true --providers.docker.swarmMode=true --providers.docker.exposedByDefault=false --entrypoints.web.address=:80 --entrypoints.websecure.address=:443 --certificatesresolvers.letsencrypt.acme.email=vadyalex@gmail.com --certificatesresolvers.letsencrypt.acme.storage=acme.json --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web",
-      "echo 'All set!",
+      "echo 'All set!'",
     ]
   }
 
