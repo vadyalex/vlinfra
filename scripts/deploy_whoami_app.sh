@@ -1,20 +1,9 @@
 #!/usr/bin/bash
 
-SERVICE_NAME="$1"
+SERVICE_NAME="whoami"
+SERVICE_PORT="80"
 
-if [ -z "${SERVICE_NAME}" ]; then
-  echo "First argument must be app name: deploy_app.sh APP_NAME IMAGE_NAME";
-  exit 1
-fi
-
-
-IMAGE_NAME="$2"
-
-if [ -z "${IMAGE_NAME}" ]; then
-  echo "Second argument must image name: deploy_app.sh ${SERVICE_NAME} IMAGE_NAME";
-  exit 1
-fi
-
+IMAGE_NAME="traefik/whoami"
 
 if [ -z "$(docker service ls | grep ${SERVICE_NAME})" ]; then
   echo "Service ${SERVICE_NAME} does not exist! Create using ${IMAGE_NAME} image..";
@@ -23,7 +12,7 @@ if [ -z "$(docker service ls | grep ${SERVICE_NAME})" ]; then
     --name "${SERVICE_NAME}"                                                                          \
     --network traefik                                                                                 \
     --label traefik.enable=true                                                                       \
-    --label "traefik.http.services.${SERVICE_NAME}.loadbalancer.server.port=80"                       \
+    --label "traefik.http.services.${SERVICE_NAME}.loadbalancer.server.port=${SERVICE_PORT}"          \
     --label "traefik.http.routers.${SERVICE_NAME}.rule=Host(\\\`${SERVICE_NAME}.app.vadyalex.me\\\`)" \
     --label "traefik.http.routers.${SERVICE_NAME}.entrypoints=websecure"                              \
     --label "traefik.http.routers.${SERVICE_NAME}.tls=true"                                           \
