@@ -13,7 +13,7 @@ if [ -z "$(docker service ls | grep ${SERVICE_NAME})" ]; then
     --network traefik                                                                                 \
     --label traefik.enable=true                                                                       \
     --label "traefik.http.services.${SERVICE_NAME}.loadbalancer.server.port=${SERVICE_PORT}"          \
-    --label "traefik.http.routers.${SERVICE_NAME}.rule=Host(\\\`${SERVICE_NAME}.app.vadyalex.me\\\`)" \
+    --label "traefik.http.routers.${SERVICE_NAME}.rule=Host(\`${SERVICE_NAME}.app.vadyalex.me\`)" \
     --label "traefik.http.routers.${SERVICE_NAME}.entrypoints=websecure"                              \
     --label "traefik.http.routers.${SERVICE_NAME}.tls=true"                                           \
     --label "traefik.http.routers.${SERVICE_NAME}.tls.certresolver=letsencrypt"                       \
