@@ -13,10 +13,14 @@ if [ -z "$(docker service ls | grep ${service_name})" ]; then
     --network traefik                                                                                 \
     --label 'traefik.enable=true'                                                                     \
     --label "traefik.http.services.${service_name}.loadbalancer.server.port=${service_port}"          \
-    --label "traefik.http.routers.${service_name}.rule=Host(\`${service_name}.app.vadyalex.me\`)"     \
     --label "traefik.http.routers.${service_name}.entrypoints=websecure"                              \
+    --label "traefik.http.routers.${service_name}.rule=Host(\`${service_name}.app.vadyalex.me\`)"     \
     --label "traefik.http.routers.${service_name}.tls=true"                                           \
     --label "traefik.http.routers.${service_name}.tls.certresolver=letsencrypt"                       \
+    --label 'traefik.http.middlewares.https_redirect.redirectscheme.scheme=https'                     \
+    --label "traefik.http.routers.${service_name}_web.entrypoints=web"                                \
+    --label "traefik.http.routers.${service_name}_web.rule=Host(\`${service_name}.app.vadyalex.me\`)" \
+    --label "traefik.http.routers.${service_name}_web.middlewares=https_redirect"                     \
     ${image_name}
 
    echo 'Done!';

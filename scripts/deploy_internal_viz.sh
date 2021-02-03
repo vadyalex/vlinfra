@@ -16,8 +16,8 @@ if [ -z "$(docker service ls | grep ${service_name})" ]; then
     --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock,readonly                                               \
     --label 'traefik.enable=true'                                                                                                    \
     --label "traefik.http.services.${service_name}.loadbalancer.server.port=${service_port}"                                         \
-    --label "traefik.http.routers.${service_name}.rule=Host(\`vega.do.vadyalex.me\`) && PathPrefix(\`/${service_name}\`)"            \
     --label "traefik.http.routers.${service_name}.entrypoints=websecure"                                                             \
+    --label "traefik.http.routers.${service_name}.rule=Host(\`vega.do.vadyalex.me\`) && PathPrefix(\`/${service_name}\`)"            \
     --label "traefik.http.routers.${service_name}.tls=true"                                                                          \
     --label "traefik.http.routers.${service_name}.tls.certresolver=letsencrypt"                                                      \
     --label 'traefik.http.middlewares.viz_auth.basicauth.users=root:$2y$10$c11GIIc4BP.tBHAD7p2hk.3TSsVLFrzLWudZQi2D5AsZH81VVefPO'    \
