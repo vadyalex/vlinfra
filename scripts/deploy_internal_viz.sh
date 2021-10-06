@@ -22,8 +22,12 @@ if [ -z "$(docker service ls | grep ${service_name})" ]; then
     --label "traefik.http.routers.${service_name}.tls.certresolver=letsencrypt"                                                      \
     --label 'traefik.http.middlewares.viz_auth.basicauth.users=root:$2y$10$c11GIIc4BP.tBHAD7p2hk.3TSsVLFrzLWudZQi2D5AsZH81VVefPO'    \
     --label 'traefik.http.middlewares.viz_auth.basicauth.removeheader=true'                                                          \
-    --label "traefik.http.middlewares.viz_strip_prefix.stripprefix.prefixes=/${service_name}"                                        \
-    --label "traefik.http.routers.${service_name}.middlewares=viz_auth,viz_strip_prefix"                                             \
+    --label "traefik.http.routers.${service_name}.middlewares=viz_auth"                                                              \
+    --label "traefik.http.middlewares.${service_name}_https_redirect.redirectscheme.scheme=https"                                    \
+    --label "traefik.http.routers.${service_name}_web.entrypoints=web"                                                               \
+    --label "traefik.http.routers.${service_name}_web.rule=Host(\`vega.do.vadyalex.me\`) && PathPrefix(\`/${service_name}\`)"        \
+    --label "traefik.http.routers.${service_name}_web.middlewares=${service_name}_https_redirect"                                    \
+    --env CTX_ROOT=/viz                                                                                                              \
     ${image_name}
 
    echo 'Done!';
